@@ -23,9 +23,10 @@ export const TableHeader = styled.div<{
   return {
     display: "grid",
     gridTemplateColumns: hasExpandable
-      ? `40px repeat(${columnsCount}, 1fr)  `
+      ? `${theme.spacing.spacing40Px} repeat(${columnsCount}, 1fr)  `
       : `repeat(${columnsCount}, 1fr) `,
     backgroundColor: theme.color.ordinalColors.gray[600],
+    alignItems: "center",
     padding: `${theme.spacing.spacing12Px} ${theme.spacing.spacing24Px}`,
   };
 });
@@ -38,9 +39,10 @@ export const TableRow = styled.div<{
   return {
     display: "grid",
     gridTemplateColumns: hasExpandable
-      ? `40px repeat(${columnsCount}, 1fr)  `
+      ? `${theme.spacing.spacing40Px} repeat(${columnsCount}, 1fr)  `
       : `repeat(${columnsCount}, 1fr) `,
     minWidth: "max-content",
+    alignItems: "center",
     borderBottom: `1px solid ${theme.color.ordinalColors.gray[600]}`,
     "&:last-child": {
       borderBottom: "none",

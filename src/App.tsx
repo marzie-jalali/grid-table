@@ -1,10 +1,14 @@
 import GridTable from "./components";
-import { mockColumns, sourceData } from "./components/data";
+import { childColumns, mockColumns, sourceData } from "./components/data";
 
 function App() {
   return (
     <>
-      <GridTable columns={mockColumns} data={sourceData} />
+      <GridTable
+        columns={mockColumns}
+        data={sourceData}
+        childColumns={childColumns}
+      />
     </>
   );
 }

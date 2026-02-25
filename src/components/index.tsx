@@ -1,52 +1,71 @@
-import React, { useState } from "react";
-import type { Column, Data } from "./data";
+import type { ChildRow, Column, EmployeeData, EmployeeRow } from "./data";
 import { TableHeader, TableElementWrapper, TableRow } from "../style";
 import { Icon } from "nakit";
+import NestedTable from "./nested-table";
+import { childColumns } from "./data";
+import React, { useState } from "react";
 
-interface TableProps {
-  columns: Column[];
-  data: Data[];
+interface GridTableProps {
+  columns: Column<EmployeeRow>[];
+  data: EmployeeData[];
+  childColumns: Column<ChildRow>[];
 }
 
-const GridTable: React.FC<TableProps> = ({ columns, data }) => {
-  const [expandTable, setExpandTable] = useState();
-
+const GridTable = ({ columns, data }: GridTableProps) => {
+  const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
+  console.log(data);
   const rowHasExpandable = data.some((row) => row.isExpandable);
-  const nestedTableHandle = (rowId: number) => {};
+  const nestedTableHandle = (Id: number) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [Id]: !prev[Id],
+    }));
+  };
   return (
     <TableElementWrapper>
       <TableHeader
         columnsCount={columns.length}
         hasExpandable={rowHasExpandable}
       >
-        <div></div>
         {rowHasExpandable && <div></div>}
         {columns.map((col) => (
           <div key={col.key}>{col.label}</div>
         ))}
       </TableHeader>
       {data.map((row, rowId) => (
-        <TableRow
-          columnsCount={columns.length}
-          hasExpandable={rowHasExpandable}
-          key={rowId}
-        >
-          {rowHasExpandable && (
+        <React.Fragment key={rowId}>
+          <TableRow
+            columnsCount={columns.length}
+            hasExpandable={rowHasExpandable}
+          >
+            {rowHasExpandable && (
+              <div>
+                {row.isExpandable && (
+                  <Icon
+                    size="1.25"
+                    iconName={
+                      expandedRows[rowId]
+                        ? "arrowDropDownBlack"
+                        : "arrowLeftBlack"
+                    }
+                    onClick={() => nestedTableHandle(rowId)}
+                  />
+                )}
+              </div>
+            )}
+            {columns.map((col) => (
+              <div key={col.key}>{row[col.key]}</div>
+            ))}
             <div>
-              {row.isExpandable && (
-                <Icon
-                  size="1.25"
-                  iconName="arrowLeftBlack"
-                  onClick={() => nestedTableHandle(rowId)}
-                />
+              {expandedRows[rowId] && row.children && (
+                <div>
+                  <br />
+                  <NestedTable data={row.children} columns={childColumns} />
+                </div>
               )}
             </div>
-          )}
-
-          {columns.map((col) => (
-            <div key={col.key}>{row[col.key]}</div>
-          ))}
-        </TableRow>
+          </TableRow>
+        </React.Fragment>
       ))}
     </TableElementWrapper>
   );
