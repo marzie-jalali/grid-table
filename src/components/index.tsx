@@ -19,6 +19,7 @@ const GridTable: React.FC<TableProps> = ({ columns, data }) => {
         columnsCount={columns.length}
         hasExpandable={rowHasExpandable}
       >
+        <div></div>
         {rowHasExpandable && <div></div>}
         {columns.map((col) => (
           <div key={col.key}>{col.label}</div>
